@@ -1,7 +1,9 @@
 const express = require("express");
 const admin = require("../config/firebaseConfig");
 const db = admin.firestore();
+var cors = require('cors');
 const app = express();
+
 
 const usersRef = db.collection("users");
 const contactsRef = db.collection("contacts");
@@ -9,6 +11,8 @@ const contactsRef = db.collection("contacts");
 // app.get("/contatcs", async (req, res) => {
 //   res.send("ruta contactas!");
 // });
+//app.use(cors());
+app.use(cors({ origin: true }));
 
 app.post('/newContact', async (req, res) => {
   const { email, telephone, idContact } = req.query;

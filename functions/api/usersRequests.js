@@ -1,13 +1,15 @@
 const express = require("express");
 const admin = require("../config/firebaseConfig");
 const db = admin.firestore();
+var cors = require('cors');
 const app = express();
 
 const contactsRef = db.collection("contacts");
 // app.get("/users", async (req, res) => {
 //   res.send("ruta users!");
 // });
-
+//app.use(cors());
+app.use(cors({ origin: true }));
 
 app.post('/newUser', async (req, res) => {
   const { providerId, uid } = req.query;
@@ -16,7 +18,10 @@ app.post('/newUser', async (req, res) => {
 
     if (providerId === 'phone') {
       const { telephone } = req.query;
-      let listContacts = await contactsRef.where('telephone', '==', telephone).get();
+      const phone = `+${telephone}`.replace(/ /g, "");
+      console.log('tel:', phone);
+      
+      let listContacts = await contactsRef.where('telephone', '==', phone).get();
       listContacts.forEach(item => {
         contacts = { ...item.data(), id: item.id };
       })
