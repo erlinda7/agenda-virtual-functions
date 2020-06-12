@@ -18,10 +18,10 @@ app.post('/newUser', async (req, res) => {
 
     if (providerId === 'phone') {
       const { telephone } = req.query;
-      const phone = `+${telephone}`.replace(/ /g, "");
-      console.log('tel:', phone);
+      // const phone = `+${telephone}`.replace(/ /g, "");
+      // console.log('tel:', phone);
       
-      let listContacts = await contactsRef.where('telephone', '==', phone).get();
+      let listContacts = await contactsRef.where('telephone', '==', telephone).get();
       listContacts.forEach(item => {
         contacts = { ...item.data(), id: item.id };
       })

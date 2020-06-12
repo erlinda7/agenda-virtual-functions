@@ -33,8 +33,8 @@ app.post('/newContact', async (req, res) => {
     })
 
     if (usersPhone.length !== 0) {
-      const phone = `+${telephone}`.replace(/ /g, "");
-      let userP = usersPhone.filter(item => item.telephone === phone);
+      // const phone = `+${telephone}`.replace(/ /g, "");
+      let userP = usersPhone.filter(item => item.telephone === telephone);
       if (userP.length !== 0) {
         let uidPhone = userP[0].uid;
         const update = await contactsRef.doc(idContact).update({ vinculed: uidPhone })
