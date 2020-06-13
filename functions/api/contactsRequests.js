@@ -8,53 +8,41 @@ const app = express();
 const usersRef = db.collection("users");
 const contactsRef = db.collection("contacts");
 
-// app.get("/contatcs", async (req, res) => {
-//   res.send("ruta contactas!");
-// });
-//app.use(cors());
 app.use(cors({ origin: true }));
 
 app.post('/newContact', async (req, res) => {
   const { email, telephone, idContact } = req.query;
   let usersPhone = [];
   let usersEmail = [];
-  let vinculed = false;
+  let contactsUpdateArray = [];
+  let listVinculed = [];
   try {
-    let listUsersPhone = await usersRef.where('providerId', '==', 'phone').get();
-    listUsersPhone.forEach(item => {
-      let user = { ...item.data(), id: item.id };
-      usersPhone.push(user);
-    })
-
+    let listUsersPhone = await usersRef.where('providerId', '==', 'phone').get(); //no habra telfonos repetidos
+    if(listUsersPhone!==0){
+      listUsersPhone.forEach(item => {
+        if (telephone === item.data().telephone) {
+          contactsUpdateArray.push(
+            contactsRef.doc(idContact).update({ vinculed: item.data().uid })
+          );
+          const vin = { contactId: idContact, userId: item.data().uid };
+          listVinculed.push(vin);
+        }
+      });
+    }
+    
     let listUsersEmail = await usersRef.where('providerId', '==', 'google.com').get();
     listUsersEmail.forEach(item => {
-      let user = { ...item.data(), id: item.id };
-      usersEmail.push(user);
+      if (email === item.data().email) {
+        contactsUpdateArray.push(
+          contactsRef.doc(idContact).update({ vinculed: item.data().uid })
+        );
+        const vin = { contactId: idContact, userId: item.data().uid };
+        listVinculed.push(vin);
+      }
     })
-
-    if (usersPhone.length !== 0) {
-      // const phone = `+${telephone}`.replace(/ /g, "");
-      let userP = usersPhone.filter(item => item.telephone === telephone);
-      if (userP.length !== 0) {
-        let uidPhone = userP[0].uid;
-        const update = await contactsRef.doc(idContact).update({ vinculed: uidPhone })
-        vinculed = uidPhone;
-      }
-    }
-
-    if (usersEmail.length !== 0) {
-      let userE = usersEmail.filter(item => item.email === email);
-
-      if (userE.length !== 0) {
-
-        console.log('userE', userE);
-        let uidEmail = userE[0].uid;
-        const update = await contactsRef.doc(idContact).update({ vinculed: uidEmail })
-        vinculed = uidEmail;
-      }
-    }
-
-    res.status(200).send({ vinculed: vinculed });
+    
+    Promise.all(contactsUpdateArray);
+    res.status(200).send(listVinculed);
 
   } catch (error) {
     return res.status(400).send({ error });
