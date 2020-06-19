@@ -10,17 +10,4 @@ admin.initializeApp({
 admin.firestore().settings({ timestampsInSnapshots: true });
 
 
- module.exports = admin;
-
-// const runtimeOpts = {
-//     timeoutSeconds: 300,
-//     memory: '1GB'
-// }
-
-// exports.myStorageFunction = functions
-//     .runWith(runtimeOpts)
-//     .storage
-//     .object()
-//     .onFinalize((object) => {
-//         // do some complicated things that take a lot of memory and time
-//     });
+module.exports = admin;
