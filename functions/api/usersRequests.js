@@ -9,7 +9,7 @@ app.use(cors({ origin: true }));
 
 app.post('/newUser', async (req, res) => {
   const { providerId, uid } = req.query;
-  let listVinculed = [];
+  let listLinked = [];
   let contactsUpdateArray = [];
   try {
     if (providerId === 'phone') {
@@ -18,15 +18,15 @@ app.post('/newUser', async (req, res) => {
       if (contacts.length !== 0) {
         contacts.forEach(item => {
           contactsUpdateArray.push(
-            contactsRef.doc(item.id).update({ vinculed: uid })
+            contactsRef.doc(item.id).update({ linked: uid })
           );
           const vinc = { contactId: item.id, userId: uid };
-          listVinculed.push(vinc);
+          listLinked.push(vinc);
         })
         Promise.all(contactsUpdateArray);
-        res.status(200).send(listVinculed);
+        res.status(200).send(listLinked);
       } else {
-        res.status(200).send(listVinculed);
+        res.status(200).send(listLinked);
       }
     }
 
@@ -36,15 +36,15 @@ app.post('/newUser', async (req, res) => {
       if (contacts.length !== 0) {
         contacts.forEach(item => {
           contactsUpdateArray.push(
-            contactsRef.doc(item.id).update({ vinculed: uid })
+            contactsRef.doc(item.id).update({ linked: uid })
           );
           const vinc = { contactId: item.id, userId: uid };
-          listVinculed.push(vinc);
+          listLinked.push(vinc);
         })
         Promise.all(contactsUpdateArray);
-        res.status(200).send(listVinculed);
+        res.status(200).send(listLinked);
       } else {
-        res.status(200).send(listVinculed);
+        res.status(200).send(listLinked);
       }
     }
   } catch (error) {

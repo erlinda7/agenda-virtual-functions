@@ -15,17 +15,17 @@ app.post('/newContact', async (req, res) => {
   let usersPhone = [];
   let usersEmail = [];
   let contactsUpdateArray = [];
-  let listVinculed = [];
+  let listLinked = [];
   try {
     let listUsersPhone = await usersRef.where('providerId', '==', 'phone').get(); //no habra telfonos repetidos
     if (listUsersPhone !== 0) {
       listUsersPhone.forEach(item => {
         if (telephone === item.data().telephone && telephone !== userPhone) {
           contactsUpdateArray.push(
-            contactsRef.doc(idContact).update({ vinculed: item.data().uid })
+            contactsRef.doc(idContact).update({ linked: item.data().uid })
           );
           const vin = { contactId: idContact, userId: item.data().uid };
-          listVinculed.push(vin);
+          listLinked.push(vin);
         }
       });
     }
@@ -34,15 +34,15 @@ app.post('/newContact', async (req, res) => {
     listUsersEmail.forEach(item => {
       if (email === item.data().email && email !== userEmail) {
         contactsUpdateArray.push(
-          contactsRef.doc(idContact).update({ vinculed: item.data().uid })
+          contactsRef.doc(idContact).update({ linked: item.data().uid })
         );
         const vin = { contactId: idContact, userId: item.data().uid };
-        listVinculed.push(vin);
+        listLinked.push(vin);
       }
     })
 
     Promise.all(contactsUpdateArray);
-    res.status(200).send(listVinculed);
+    res.status(200).send(listLinked);
 
   } catch (error) {
     return res.status(400).send({ error });
